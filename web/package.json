@@ -1,0 +1,22 @@
+{
+  "name": "local",
+  "version": "0.1.0",
+  "dependencies": {
+    "babel-core": "~4.4.3",
+    "babel-loader": "~4.0.0",
+    "css-loader": "~0.9.1",
+    "react-router": "^0.13.0",
+    "react-tap-event-plugin": "*",
+    "restful-material": "asok/restful-material",
+    "webpack": "~1.10.5",
+    "material-ui": "0.14.0",
+    "react": "*",
+    "react-dom": "*",
+    "react-intl": "2.0.0-beta-2"
+  },
+  "scripts": {
+    "watch": "webpack --progress --colors --watch",
+    "build": "ENV=production webpack -p"
+  },
+  "author": "asok"
+}
