@@ -41,7 +41,17 @@ Create file `config/initializers/i18n_backend.rb` with content:
 
 ```rb
 require 'i18n/backend/active_record'
+
 I18n.backend = I18n::Backend::ActiveRecord.new
+```
+
+Probably you will want to use memoize so you don't generate a bunch of queries to the translations table on each request:
+
+```rb
+require 'i18n/backend/active_record'
+
+I18n.backend = I18n::Backend::ActiveRecord.new
+I18n.backend.class.include(I18n::Backend::Memoize)
 ```
 
 #### Mount
