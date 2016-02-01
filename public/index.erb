@@ -12,6 +12,6 @@
     <div id="content"></div>
     <div id="spinner"></div>
 
-    <script src="bundle.js"></script>
+    <script src="<%= request.path.end_with?('/') ? "#{request.path}bundle.js" : "#{request.path}/bundle.js" %>"></script>
   </body>
 </html>
