@@ -1,6 +1,6 @@
 # Local
 
-A simple Sinatra app for managing translations in the database.
+A simple Sinatra app for managing translations.
 
 ## Installation
 
@@ -16,16 +16,7 @@ And then execute:
 
 ## Usage
 
-### Standalone
-  
-Start the app using `LOCAL_DB_URI=sequel_connection_string rackup -p 1234`.
-For `sequel_connection_string` see the Sequel's [documentation](http://sequel.jeremyevans.net/rdoc/classes/Sequel.html#method-c-connect).
-
-You can now go to `http://localhost:1234` and browse/update translations.
-
-Upon the first run the table `translations` will be created if not present.
-
-### Rails application
+### Rails application with ActiveRecord backend
 
 #### Setup backend
 
@@ -50,8 +41,12 @@ Probably you will want to use memoize so you don't generate a bunch of queries t
 ```rb
 require 'i18n/backend/active_record'
 
-I18n.backend = I18n::Backend::ActiveRecord.new
-I18n.backend.class.include(I18n::Backend::Memoize)
+if I18n::Backend::ActiveRecord::Translation.table_exists?
+  I18n.backend = I18n::Backend::ActiveRecord.new
+  I18n.backend.class.include(I18n::Backend::Memoize)
+
+  Local.backend = Local::ActiveRecord::Backend.new
+end
 ```
 
 #### Mount

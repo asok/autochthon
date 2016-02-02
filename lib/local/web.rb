@@ -2,7 +2,7 @@ require 'erb'
 require 'json'
 require 'sinatra/base'
 
-require_relative './translation'
+require_relative './backend'
 
 module Local
   class Web < Sinatra::Base
@@ -26,41 +26,15 @@ module Local
     get '/translations' do
       content_type :json
 
-      Translation.order(:id).all.to_json
-    end
-
-    get '/query' do
-      content_type :json
-
-      Translation.filter(symbolize_keys(params["q"])).all.to_json
-    end
-
-    get '/translations/:id' do
-      content_type :json
-
-      Translation[params[:id]].to_json
+      Local.backend.all.to_json
     end
 
     post '/translations' do
       content_type :json
 
-      Translation.insert(locale: json[:locale],
-                          key: json[:key],
-                          value: json[:value]).to_json
-    end
-
-    put '/translations/:id' do
-      content_type :json
-
-      t = Translation[params[:id]]
-      t.update(json)
-      t.to_json
-    end
-
-    delete '/translations/:id' do
-      content_type :json
-
-      Translation[params[:id]].delete
+      Local.backend.store_translations(json[:locale],
+                                       {json[:key] => json[:value]},
+                                       escape: false).to_json
     end
   end
 end

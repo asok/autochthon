@@ -1,4 +1,12 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in local.gemspec
+group :test do
+  gem 'activerecord'
+
+  gem 'i18n-active_record',
+      :git => 'git://github.com/svenfuchs/i18n-active_record.git',
+      :require => 'i18n/active_record'
+end
+
 gemspec
+
