@@ -4,7 +4,6 @@ require 'rspec'
 ENV['RACK_ENV'] = 'test'
 
 require_relative "../lib/local"
-require_relative "../lib/local/db"
 
 require 'database_cleaner'
 

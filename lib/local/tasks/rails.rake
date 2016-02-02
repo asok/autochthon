@@ -1,4 +1,10 @@
 namespace :local do
+  desc "Create translations table"
+  task create: :environment do
+    require 'local/sequel/db'
+    Local::Sequel::DB.create_table
+  end
+
   desc "Reads all translations from yml files and inserts them into db"
   task import: :environment do
     unless defined?(I18n::Backend::ActiveRecord)

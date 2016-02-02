@@ -70,6 +70,14 @@ authenticate(:admin) do
 end
 ```
 
+#### Create table
+
+Create the translations table:
+
+```
+rake local:create
+```
+
 #### Import
 
 You can import existing translations to the db:
