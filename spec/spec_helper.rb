@@ -1,12 +1,12 @@
+require 'bundler'
+ENV['RACK_ENV'] = 'test'
+Bundler.require(:default, 'test')
+Bundler.require(:default, 'development')
+
 require 'rack/test'
 require 'rspec'
 
-ENV['RACK_ENV'] = 'test'
-
 require_relative "../lib/local"
-require_relative "../lib/local/db"
-
-require 'database_cleaner'
 
 module RSpecMixin
   include Rack::Test::Methods
@@ -30,23 +30,16 @@ module RSpecMixin
   def delete_json(path)
     delete path, {}, "Content-Type" => "application/json"
   end
-
-  def translations
-    Local::Translation
-  end
 end
 
 RSpec.configure do |c|
   c.include RSpecMixin
 
   c.before(:suite) do
-    DatabaseCleaner[:sequel].strategy = :transaction
-    DatabaseCleaner[:sequel].clean_with(:truncation)
+    Local.backend = Local::Simple::Backend.new
   end
 
-  c.around(:each) do |example|
-    DatabaseCleaner[:sequel].cleaning do
-      example.run
-    end
+  c.before(:each) do
+    Local.backend.instance_variable_set(:@translations, nil)
   end
 end

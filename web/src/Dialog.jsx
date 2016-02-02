@@ -26,10 +26,16 @@ module.exports = React.createClass({
     return xhr;
   },
 
+  cb(xhr) {
+    this.props.onSuccess();
+    return xhr;
+  },
+
   submit() {
     let t = this.state.translation;
     t.set('value', this.refs.field.getValue());
-    store.update(t).then(this.onSuccess, this.onFailure).then(this.close);
+    store.update(t).then(this.onSuccess, this.onFailure).
+          then(this.close).then(this.cb);
   },
 
   render() {

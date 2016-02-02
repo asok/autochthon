@@ -8,7 +8,9 @@ module.exports = createStore({
   },
 
   update(t) {
-    return this.PUT(`translations/${t.get('id')}`, {
+    return this.POST('translations', {
+      locale: t.get('locale'),
+      key: t.get('key'),
       value: t.get('value')
     });
   }

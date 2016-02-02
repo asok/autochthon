@@ -5,11 +5,13 @@ module.exports = {
     info: React.PropTypes.object
   },
 
-  onSuccess() {
+  onSuccess(xhr) {
     this.context.info.show('Success', 'OK');
+    return xhr;
   },
 
-  onFailure() {
+  onFailure(xhr) {
     this.context.info.show('Something went wrong');
+    return xhr;
   }
 };

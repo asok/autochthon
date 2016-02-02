@@ -17,12 +17,6 @@ module Local
       Hash[h.map{ |k, v| [k.intern, v] }]
     end
 
-    # This way we can defer requiring the db (needed for rails)
-    def translations
-      require_relative './db'
-      Translation
-    end
-
     get '/' do
       erb :index
     end
@@ -30,41 +24,15 @@ module Local
     get '/translations' do
       content_type :json
 
-      translations.order(:id).all.to_json
-    end
-
-    get '/query' do
-      content_type :json
-
-      translations.filter(symbolize_keys(params["q"])).all.to_json
-    end
-
-    get '/translations/:id' do
-      content_type :json
-
-      translations[id: params[:id]].to_json
+      Local.backend.all.to_json
     end
 
     post '/translations' do
       content_type :json
 
-      translations.insert(locale: json[:locale],
-                          key: json[:key],
-                          value: json[:value]).to_json
-    end
-
-    put '/translations/:id' do
-      content_type :json
-
-      t = translations[params[:id]]
-      t.update(json)
-      t.to_json
-    end
-
-    delete '/translations/:id' do
-      content_type :json
-
-      translations[params[:id]].delete
+      Local.backend.store_translations(json[:locale],
+                                       {json[:key] => json[:value]},
+                                       escape: false).to_json
     end
   end
 end
