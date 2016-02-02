@@ -2,8 +2,6 @@ require 'erb'
 require 'json'
 require 'sinatra/base'
 
-require_relative './backend'
-
 module Local
   class Web < Sinatra::Base
     enable :sessions

@@ -1,6 +1,8 @@
 require "local/version"
 require "local/web"
 require 'local/rails'
+require 'local/simple/backend'
+require 'local/active_record/backend'
 
 module Local
   module Methods
