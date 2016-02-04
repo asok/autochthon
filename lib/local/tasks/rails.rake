@@ -1,19 +1,9 @@
+require 'local/active_record/migration'
+
 namespace :local do
   desc "Create translations table"
   task create: :environment do
-    Class.new(ActiveRecord::Migration) do
-      def up
-        create_table :translations do |t|
-          t.string :locale
-          t.string :key
-          t.text   :value
-          t.text   :interpolations
-          t.boolean :is_proc, default: false
-
-          t.timestamps null: false
-        end
-      end
-    end.new.up
+    Local::ActiveRecord::Migration.new.change
   end
 
   desc "Reads all translations from yml files and inserts them into db"

@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "byebug"
-  spec.add_development_dependency "pg"
+  spec.add_development_dependency "sqlite3"
 
   spec.add_dependency "sinatra"
   spec.add_dependency "sinatra-contrib"
