@@ -42,4 +42,18 @@ RSpec.configure do |c|
   c.before(:each) do
     Local.backend.instance_variable_set(:@translations, nil)
   end
+
+  c.before(:all, active_record: true) do
+    ActiveRecord::Base.establish_connection(
+      adapter:  "sqlite3",
+      database: "local",
+      dbfile:   ":memory:"
+    )
+  end
+
+  c.before(:each, translations_table: true) do
+    unless I18n::Backend::ActiveRecord::Translation.table_exists?
+      Local::ActiveRecord::Migration.new.change
+    end
+  end
 end

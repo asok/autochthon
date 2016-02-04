@@ -2,23 +2,11 @@ require 'spec_helper'
 require 'local/active_record/backend'
 require 'local/active_record/migration'
 
-RSpec.describe Local::ActiveRecord::Backend do
+RSpec.describe Local::ActiveRecord::Backend, active_record: true do
   it{ should be_a(I18n::Backend::ActiveRecord::Implementation) }
 
-  describe '#all' do
-    before(:all) do
-      ActiveRecord::Base.establish_connection(
-        adapter:  "sqlite3",
-        database: "local",
-        dbfile:   ":memory:"
-      )
-
-      unless I18n::Backend::ActiveRecord::Translation.table_exists?
-        Local::ActiveRecord::Migration.new.change
-      end
-    end
-
-    around do |example| 
+  describe '#all', translations_table: true do
+    around do |example|
       Local.backend = Local::ActiveRecord::Backend.new
       ActiveRecord::Base.transaction { example.run }
       Local.backend = Local::Simple::Backend.new
