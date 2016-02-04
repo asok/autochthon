@@ -6,8 +6,11 @@ begin
       class Backend
         include I18n::Backend::ActiveRecord::Implementation
 
-        def all
-          I18n::Backend::ActiveRecord::Translation.all
+        def all(locales = nil)
+          scope = I18n::Backend::ActiveRecord::Translation
+          scope = scope.where(locale: locales) if locales
+
+          scope.all
         end
       end
     end

@@ -10,3 +10,4 @@
 /web/node_modules/
 *.tern-port
 .ruby-version
+local

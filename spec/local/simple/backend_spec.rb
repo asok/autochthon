@@ -16,5 +16,11 @@ RSpec.describe Local::Simple::Backend do
       expect(all).to include(key: :"baz.b", value: "bar", locale: :en)
       expect(all).to include(key: :foo,     value: "bar", locale: :pl)
     end
+
+    context 'passing in locales' do
+      it 'returns translations for the passed locales only' do
+        expect(subject.all([:pl])).to eq([key: :foo,     value: "bar", locale: :pl])
+      end
+    end
   end
 end
