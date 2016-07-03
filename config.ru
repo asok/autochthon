@@ -1,3 +1,3 @@
-require './lib/local/web'
+require './lib/autochthon/web'
 
-run Local::Web
+run Autochthon::Web

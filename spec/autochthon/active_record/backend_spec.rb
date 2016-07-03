@@ -1,15 +1,15 @@
 require 'spec_helper'
-require 'local/active_record/backend'
-require 'local/active_record/migration'
+require 'autochthon/active_record/backend'
+require 'autochthon/active_record/migration'
 
-RSpec.describe Local::ActiveRecord::Backend, active_record: true do
+RSpec.describe Autochthon::ActiveRecord::Backend, active_record: true do
   it{ should be_a(I18n::Backend::ActiveRecord::Implementation) }
 
   describe '#all', translations_table: true do
     around do |example|
-      Local.backend = Local::ActiveRecord::Backend.new
+      Autochthon.backend = Autochthon::ActiveRecord::Backend.new
       ActiveRecord::Base.transaction { example.run }
-      Local.backend = Local::Simple::Backend.new
+      Autochthon.backend = Autochthon::Simple::Backend.new
     end
 
     before do
@@ -19,7 +19,7 @@ RSpec.describe Local::ActiveRecord::Backend, active_record: true do
     end
 
     def normalize(translations)
-      @normalize ||= JSON.parse(translations.to_json).map do |t|
+      JSON.parse(translations.to_json).map do |t|
         t.keep_if{ |k, _| %w[locale key value].include? k }
       end
     end

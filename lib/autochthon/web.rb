@@ -2,7 +2,7 @@ require 'erb'
 require 'json'
 require 'sinatra/base'
 
-module Local
+module Autochthon
   class Web < Sinatra::Base
     enable :sessions
 
@@ -24,13 +24,13 @@ module Local
     get '/translations' do
       content_type :json
 
-      Local.backend.all.to_json
+      Autochthon.backend.all.to_json
     end
 
     post '/translations' do
       content_type :json
 
-      Local.backend.store_translations(json[:locale],
+      Autochthon.backend.store_translations(json[:locale],
                                        {json[:key] => json[:value]},
                                        escape: false).to_json
     end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Local::Simple::Backend do
+RSpec.describe Autochthon::Simple::Backend do
   it{ should be_a(I18n::Backend::Simple::Implementation) }
 
   describe '#all' do
@@ -19,7 +19,7 @@ RSpec.describe Local::Simple::Backend do
 
     context 'passing in locales' do
       it 'returns translations for the passed locales only' do
-        expect(subject.all([:pl])).to eq([key: :foo,     value: "bar", locale: :pl])
+        expect(subject.all([:pl])).to eq([key: :foo, value: "bar", locale: :pl])
       end
     end
   end

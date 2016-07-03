@@ -1,4 +1,4 @@
-# Local
+# Autochthon
 
 A simple Sinatra app for managing translations.
 
@@ -7,7 +7,7 @@ A simple Sinatra app for managing translations.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'local', github: 'asok/local'
+gem 'autochthon', github: 'asok/autochthon
 ```
 
 And then execute:
@@ -33,7 +33,8 @@ Create file `config/initializers/i18n_backend.rb` with content:
 ```rb
 require 'i18n/backend/active_record'
 
-I18n.backend = I18n::Backend::ActiveRecord.new
+I18n.backend       = I18n::Backend::ActiveRecord.new
+Autochthon.backend = Autochthon::ActiveRecord::Backend.new
 ```
 
 Probably you will want to use memoize so you don't generate a bunch of queries to the translations table on each request:
@@ -45,7 +46,7 @@ if I18n::Backend::ActiveRecord::Translation.table_exists?
   I18n.backend = I18n::Backend::ActiveRecord.new
   I18n.backend.class.include(I18n::Backend::Memoize)
 
-  Local.backend = Local::ActiveRecord::Backend.new
+  Autochthon.backend = Autochthon::ActiveRecord::Backend.new
 end
 ```
 
@@ -54,14 +55,14 @@ end
 Add this to the routes:
 
 ```rb
-mount Local::Web => '/local', :as => 'local'
+mount Autochthon::Web => '/autochthon', :as => 'autochthon'
 ```
 
 Probably you will want to authenticate. In case you are using [devise](https://github.com/plataformatec/devise) you can do: 
 
 ```rb
 authenticate(:admin) do
-  mount Local::Web => '/local', :as => 'local'
+  mount Autochthon::Web => '/autochthon', :as => 'autochthon'
 end
 ```
 
@@ -70,7 +71,7 @@ end
 Create the translations table:
 
 ```
-rake local:create
+rake autochthon:create
 ```
 
 #### Import
@@ -78,13 +79,13 @@ rake local:create
 You can import existing translations to the db:
 
 ```
-rake local:import
+rake autochthon:import
 ```
 
 If you want to only import specific locales you can do so:
 
 ```
-LOCALES="en,fr" rake local:import
+LOCALES="en,fr" rake autochthon:import
 ```
 
 #### Update translations via right click
@@ -92,7 +93,7 @@ LOCALES="en,fr" rake local:import
 In the js manifest file that you include in your admin layout add this:
 
 ```
-\\= require local
+\\= require autochthon
 ```
 
 Now you can right click on the elements to create/update translations for them.
@@ -111,7 +112,7 @@ Note: for a release you can run `npm run build`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/asok/local.
+Bug reports and pull requests are welcome on GitHub at https://github.com/asok/autochthon.
 
 
 ## License

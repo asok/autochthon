@@ -1,7 +1,7 @@
-module Local
+module Autochthon
   class Rails < ::Rails::Engine
     rake_tasks do
-      load 'local/tasks/rails.rake'
+      load 'autochthon/tasks/rails.rake'
     end
   end
 end if defined?(::Rails)

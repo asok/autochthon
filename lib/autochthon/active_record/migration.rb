@@ -1,7 +1,7 @@
 begin
   require 'active_record'
 
-  module Local
+  module Autochthon
     module ActiveRecord
       class Migration < ::ActiveRecord::Migration
         def change

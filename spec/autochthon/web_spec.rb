@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Local::Web do
+RSpec.describe Autochthon::Web do
   describe "/" do
     it "serves the html file" do
       get '/'
@@ -11,7 +11,7 @@ RSpec.describe Local::Web do
 
   describe "GET /translations" do
     let!(:translation) do
-      Local.backend.store_translations(:en, 'key' => 'value')
+      Autochthon.backend.store_translations(:en, 'key' => 'value')
     end
 
     it 'serves all translations' do
@@ -25,7 +25,7 @@ RSpec.describe Local::Web do
     it 'stores the translation' do
       post_json "/translations", {locale: 'en', key: 'foo', value: 'bar'}
 
-      expect(Local.backend.translate(:en, 'foo')).to eq('bar')
+      expect(Autochthon.backend.translate(:en, 'foo')).to eq('bar')
     end
   end
 end

@@ -1,9 +1,9 @@
-require 'local/active_record/migration'
+require 'autochthon/active_record/migration'
 
-namespace :local do
+namespace :autochthon do
   desc "Create translations table"
   task create: :environment do
-    Local::ActiveRecord::Migration.new.change
+    Autochthon::ActiveRecord::Migration.new.change
   end
 
   desc "Reads all translations from yml files and inserts them into db"
@@ -12,7 +12,7 @@ namespace :local do
       raise "Please include i18n-active_record gem in your Gemfile"
     end
 
-    backend = Local::Simple::Backend.new
+    backend = Autochthon::Simple::Backend.new
 
     locales = (ENV['LOCALES'] || '').split(',')
     locales = backend.available_locales if locales.empty?

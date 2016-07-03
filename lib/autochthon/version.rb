@@ -1,3 +1,3 @@
-module Local
+module Autochthon
   VERSION = "0.1.0"
 end

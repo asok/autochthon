@@ -6,13 +6,13 @@ Bundler.require(:default, 'development')
 require 'rack/test'
 require 'rspec'
 
-require_relative "../lib/local"
+require "autochthon"
 
 module RSpecMixin
   include Rack::Test::Methods
 
   def app
-    Local::Web
+    Autochthon::Web
   end
 
   def get_json(path, data = {})
@@ -36,11 +36,11 @@ RSpec.configure do |c|
   c.include RSpecMixin
 
   c.before(:suite) do
-    Local.backend = Local::Simple::Backend.new
+    Autochthon.backend = Autochthon::Simple::Backend.new
   end
 
   c.before(:each) do
-    Local.backend.instance_variable_set(:@translations, nil)
+    Autochthon.backend.instance_variable_set(:@translations, nil)
   end
 
   c.before(:all, active_record: true) do
@@ -53,7 +53,7 @@ RSpec.configure do |c|
 
   c.before(:each, translations_table: true) do
     unless I18n::Backend::ActiveRecord::Translation.table_exists?
-      Local::ActiveRecord::Migration.new.change
+      Autochthon::ActiveRecord::Migration.new.change
     end
   end
 end

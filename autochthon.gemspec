@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'local/version'
+require 'autochthon/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "local"
-  spec.version       = Local::VERSION
+  spec.name          = "autochthon"
+  spec.version       = Autochthon::VERSION
   spec.authors       = ["Adam Sokolnicki"]
   spec.email         = ["adam.sokolnicki@gmail.com"]
 
   spec.summary       = %q{A slim app for storing locales in the db}
   spec.description   = %q{A slim app for storing locales in the db}
-  spec.homepage      = "https://github.com/asok/local"
+  spec.homepage      = "https://github.com/asok/autochthon"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

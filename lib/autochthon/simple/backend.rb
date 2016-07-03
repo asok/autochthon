@@ -1,4 +1,4 @@
-module Local
+module Autochthon
   module Simple
     class Backend
       include I18n::Backend::Flatten
