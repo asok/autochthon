@@ -13,10 +13,6 @@ module Autochthon
       @json ||= JSON.parse(request.body.read, symbolize_names: true)
     end
 
-    def symbolize_keys(h)
-      Hash[h.map{ |k, v| [k.intern, v] }]
-    end
-
     get '/' do
       erb :index
     end
@@ -31,8 +27,8 @@ module Autochthon
       content_type :json
 
       Autochthon.backend.store_translations(json[:locale],
-                                       {json[:key] => json[:value]},
-                                       escape: false).to_json
+                                            {json[:key] => json[:value]},
+                                            escape: false).to_json
     end
   end
 end

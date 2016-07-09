@@ -22,10 +22,16 @@ RSpec.describe Autochthon::Web do
   end
 
   describe "POST /translations" do
-    it 'stores the translation' do
+    it 'stores the 1 level translation' do
       post_json "/translations", {locale: 'en', key: 'foo', value: 'bar'}
 
       expect(Autochthon.backend.translate(:en, 'foo')).to eq('bar')
+    end
+
+    it 'stores the multiple level translation' do
+      post_json "/translations", {locale: 'en', key: 'foo', value: {baz: 'bar'}}
+
+      expect(Autochthon.backend.translate(:en, 'foo.baz')).to eq('bar')
     end
   end
 end
