@@ -6,6 +6,15 @@ Bundler.require(:default, 'development')
 require 'rack/test'
 require 'rspec'
 
+require "capybara/rspec"
+require 'capybara/webkit'
+
+Sinatra::Application.environment = :test
+
+Capybara.app               = Autochthon::Web
+Capybara.javascript_driver = :webkit
+Capybara.default_selector  = :xpath
+
 require "autochthon"
 
 module RSpecMixin
@@ -35,11 +44,13 @@ end
 RSpec.configure do |c|
   c.include RSpecMixin
 
-  c.before(:suite) do
-    Autochthon.backend = Autochthon::Simple::Backend.new
-  end
+  c.before(:each) do |ex|
+    Autochthon.backend = if ex.metadata[:type] == :feature
+                           Autochthon::ActiveRecord::Backend.new
+                         else
+                           Autochthon::Simple::Backend.new
+                         end
 
-  c.before(:each) do
     Autochthon.backend.instance_variable_set(:@translations, nil)
   end
 
