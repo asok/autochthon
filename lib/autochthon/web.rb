@@ -13,6 +13,14 @@ module Autochthon
       @json ||= JSON.parse(request.body.read, symbolize_names: true)
     end
 
+    def unflatten_data(key, value)
+      keys = key.split(I18n::Backend::Flatten::FLATTEN_SEPARATOR)
+
+      keys[0...-1].reverse.inject(keys.last => value) do |out, k|
+        {k => out}
+      end
+    end
+
     get '/' do
       erb :index
     end
@@ -27,7 +35,7 @@ module Autochthon
       content_type :json
 
       Autochthon.backend.store_translations(json[:locale],
-                                            {json[:key] => json[:value]},
+                                            unflatten_data(json[:key], json[:value]),
                                             escape: false).to_json
     end
   end

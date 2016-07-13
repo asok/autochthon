@@ -29,7 +29,7 @@ RSpec.describe Autochthon::Web do
     end
 
     it 'stores the multiple level translation' do
-      post_json "/translations", {locale: 'en', key: 'foo', value: {baz: 'bar'}}
+      post_json "/translations", {locale: 'en', key: 'foo.baz', value: 'bar'}
 
       expect(Autochthon.backend.translate(:en, 'foo.baz')).to eq('bar')
     end

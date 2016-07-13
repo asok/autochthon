@@ -22,8 +22,6 @@ RSpec.describe "Browsing translations from the app endpoint",
   it 'is possible to update the missing translation' do
     visit '/'
     expect(page).to have_css('table')
-    expect(page).to have_xpath("//td[text()='en']")
-
 
     find("//td[text()='bar']").click
     find("//textarea[text()='bar']").set("foo")
