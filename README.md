@@ -110,6 +110,10 @@ In the layout file call this method:
 
 Now you can right click on the missing translations fill them in.
 
+## Examples
+
+* rails application using ActiveRecord backend https://github.com/asok/autochthon_rails_example_app
+
 ## Development
 
 In the dir `web/` run `npm install` fallowed by `npm run watch`.
