@@ -11,3 +11,4 @@
 *.tern-port
 .ruby-version
 local
+capybara-*
