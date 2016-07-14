@@ -4,19 +4,20 @@
   function submit(e) {
     e.preventDefault();
 
-    var data = e.data.toSend;
-    data.value = $('#local-value').val();
+    var toSend = e.data.toSend;
+    toSend.value = $('#autochthon-value').val();
 
     $.ajax({
       url: e.data.url,
       type: e.data.type,
-      data: JSON.stringify(data),
+      data: JSON.stringify(toSend),
       dataType: 'json',
       contentType: 'application/json',
       headers: {
         'HTTP_X_CSRF_TOKEN': $.rails.csrfToken()
       },
-      success: function(data, status, xhr){
+      success: function(response){
+        $(e.data.target).replaceWith(response[toSend.key]);
         modal().close();
       },
       error: function(xhr, status, error) {
@@ -26,58 +27,23 @@
   }
 
   function modal() {
-    return $('#local-modal')[0];
+    return $('#autochthon-modal')[0];
   }
 
   function form() {
-    return "<form id='local-form'>" +
-      "<p id='local-p'></p>" +
-      "<textarea id='local-value' name='value'></textarea>" +
-      "<button id='local-cancel' type='button'>Cancel</button>" +
-      "<button id='local-submit' type='submit'>Submit</button>" +
+    return "<form id='autochthon-form'>" +
+      "<p id='autochthon-p'></p>" +
+      "<textarea id='autochthon-value' name='value'></textarea>" +
+      "</br>" +
+      "<button id='autochthon-cancel' type='button'>Cancel</button>" +
+      "<button id='autochthon-submit' type='submit'>Submit</button>" +
       "</form>";
   }
 
   function appendModal() {
-    document.body.innerHTML += "<dialog id='local-modal'>" +
+    document.body.innerHTML += "<dialog id='autochthon-modal'>" +
       form() +
       "</dialog>";
-  }
-
-  function query(q) {
-    $.ajax({
-      method: 'GET',
-      url: '/local/query',
-      data: {q: q},
-      dataType: 'json',
-      contentType: 'application/json',
-      headers: {
-        'HTTP_X_CSRF_TOKEN': $.rails.csrfToken()
-      },
-      success: function(data, status, xhr){
-        if(data.length == 0)
-          alert('Sorry I could not find the entry for it. Please try finding it in the list of all translations.');
-        if(data.length > 1)
-          alert('There is more than 1 translation with value "' + q.value + '". Please try finding it in the list of all translations.');
-        if(data.length == 1) {
-          var t = data[0];
-
-          $('#local-form').off().on('submit', {
-            url: '/local/translations/' + t.id,
-            type: 'PUT',
-            toSend: {
-              key: t.key,
-              locale: t.locale
-            }
-          }, submit);
-
-          openForm(t);
-        }
-      },
-      error: function(xhr, status, error) {
-        console.error(xhr);
-      }
-    });
   }
 
   function openForm(t) {
@@ -87,9 +53,9 @@
     else
       p = 'Create a new translation for locale: ' + t.locale + ' and key: ' + t.key;
 
-    $('#local-p').text(p);
-    $('#local-value').val(t.value);
-    $('#local-value').attr('placeholder', 'A new value for key: ' + t.key);
+    $('#autochthon-p').text(p);
+    $('#autochthon-value').val(t.value);
+    $('#autochthon-value').attr('placeholder', 'A new value for key: ' + t.key);
 
     modal().showModal();
   }
@@ -104,7 +70,7 @@
   }
 
   function contextListener(){
-    $('#local-cancel').on('click', function(e){
+    $('#autochthon-cancel').on('click', function(e){
       modal().close();
     });
 
@@ -114,7 +80,13 @@
          el.title &&
          el.title.match(/^translation missing/)){
 
+        if (typeof HTMLDialogElement !== 'function') {
+          alert("Your browser does not support the 'dialog' element");
+          return;
+        }
+
         var key = el.title.match(/^translation missing: (.+)$/)[1];
+        var mountPoint = $('#autochthon-metadata').data().mountPoint;
 
         openForm({
           value: el.textContent,
@@ -122,32 +94,23 @@
           key: extractKey(key)
         });
 
-        $('#local-form').off().on('submit', {
-          url: '/local/translations',
+        $('#autochthon-form').off().on('submit', {
+          url: "/" + mountPoint + "/translations",
           type: 'POST',
+          target: e.target,
           toSend: {
             key: extractKey(key),
             locale: extractLocale(key)
           }
         }, submit);
-      } else if(el.textContent != '') {
-        query({value: $.trim(el.textContent)});
+        e.preventDefault();
       }
-
-
-      e.preventDefault();
     });
   }
 
   function init(){
     appendModal();
     contextListener();
-    // $('#local-form').on('ajax:beforeSend', function(e, xhr, settings){
-    //   settings.dataType = 'json';
-      // settings.processData = false;
-      // xhr.setRequestHeader('Content-Type', 'application/json');
-      // settings.data = JSON.stringify(settings.data);
-    // });
     $.rails.refreshCSRFTokens();
   }
 

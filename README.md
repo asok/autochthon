@@ -35,6 +35,8 @@ require 'i18n/backend/active_record'
 
 I18n.backend       = I18n::Backend::ActiveRecord.new
 Autochthon.backend = Autochthon::ActiveRecord::Backend.new
+
+Autochthon.mount_point = "your_mount_point"
 ```
 
 Probably you will want to use memoize so you don't generate a bunch of queries to the translations table on each request:
@@ -48,6 +50,8 @@ if I18n::Backend::ActiveRecord::Translation.table_exists?
 
   Autochthon.backend = Autochthon::ActiveRecord::Backend.new
 end
+
+Autochthon.mount_point = "your_mount_point"
 ```
 
 #### Mount
@@ -55,14 +59,14 @@ end
 Add this to the routes:
 
 ```rb
-mount Autochthon::Web => '/autochthon', :as => 'autochthon'
+mount Autochthon::Web => '/autochthon', :as => Autochthon.mount_point
 ```
 
 Probably you will want to authenticate. In case you are using [devise](https://github.com/plataformatec/devise) you can do: 
 
 ```rb
 authenticate(:admin) do
-  mount Autochthon::Web => '/autochthon', :as => 'autochthon'
+  mount Autochthon::Web => '/autochthon', :as Autochthon.mount_point
 end
 ```
 
@@ -88,15 +92,23 @@ If you want to only import specific locales you can do so:
 LOCALES="en,fr" rake autochthon:import
 ```
 
-#### Update translations via right click
+#### Filling missing translations via right click
 
-In the js manifest file that you include in your admin layout add this:
+In your `ApplicationController` do:
 
+```rb
+class ApplicationController < ActionController::Base
+  helper Autochthon::ApplicationHelper
+end
 ```
-\\= require autochthon
+
+In the layout file call this method:
+
+```erb
+<%= include_autochthon_script %>
 ```
 
-Now you can right click on the elements to create/update translations for them.
+Now you can right click on the missing translations fill them in.
 
 ## Development
 

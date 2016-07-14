@@ -8,21 +8,21 @@ RSpec.describe "Browsing translations from the app endpoint",
 
   before do
     Autochthon.backend.store_translations(:en, {baz: {b: 'bar'}})
+
+    visit '/'
+    expect(page).to have_css('table')
   end
 
   it 'is possible to browse the translations' do
-    visit '/'
-    expect(page).to have_css('table')
-
     expect(page).to have_xpath("//td[text()='en']")
     expect(page).to have_xpath("//td[text()='baz.b']")
     expect(page).to have_xpath("//td[text()='bar']")
   end
 
-  it 'is possible to update the missing translation' do
-    visit '/'
-    expect(page).to have_css('table')
+  xit 'possible to filter the translations' do
+  end
 
+  it 'is possible to update the translations' do
     find("//td[text()='bar']").click
     find("//textarea[text()='bar']").set("foo")
     find("//span[text()='OK']").click

@@ -1,6 +1,6 @@
 require "autochthon/version"
 require "autochthon/web"
-require 'autochthon/rails'
+require 'autochthon/engine'
 require 'autochthon/simple/backend'
 require 'autochthon/active_record/backend'
 
@@ -12,6 +12,14 @@ module Autochthon
 
     def backend
       @@backend
+    end
+
+    def mount_point=(mount_point)
+      @@mount_point = mount_point
+    end
+
+    def mount_point
+      @@mount_point
     end
   end
 
