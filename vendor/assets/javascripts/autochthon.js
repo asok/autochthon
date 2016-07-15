@@ -47,11 +47,7 @@
   }
 
   function openForm(t) {
-    var p;
-    if(t.id)
-      p = 'Edit a translation for locale: ' + t.locale + ' and key: ' + t.key;
-    else
-      p = 'Create a new translation for locale: ' + t.locale + ' and key: ' + t.key;
+    var p = 'Create a new translation for locale: ' + t.locale + ' and key: ' + t.key;
 
     $('#autochthon-p').text(p);
     $('#autochthon-value').val(t.value);
