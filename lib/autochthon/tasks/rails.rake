@@ -19,9 +19,9 @@ namespace :autochthon do
 
     ActiveRecord::Base.transaction do
       backend.all(locales).each do |t|
-          I18n::Backend::ActiveRecord::Translation.create!(locale: t[:locale],
-                                                           key: t[:key],
-                                                           value: t[:value])
+        I18n::Backend::ActiveRecord::Translation.create!(locale: t[:locale],
+                                                         key: t[:key],
+                                                         value: t[:value])
       end
     end
   end

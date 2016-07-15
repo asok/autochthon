@@ -2,8 +2,6 @@ module Autochthon
   class Engine < ::Rails::Engine
     isolate_namespace Autochthon
 
-    # engine_name "autochthon"
-
     rake_tasks do
       load 'autochthon/tasks/rails.rake'
     end

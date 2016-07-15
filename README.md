@@ -20,7 +20,7 @@ And then execute:
 
 #### Setup backend
 
-Add this to your Gemfile: 
+Add this to your Gemfile:
 
 ```rb
 gem 'i18n-active_record',
@@ -62,7 +62,7 @@ Add this to the routes:
 mount Autochthon::Web => '/autochthon', :as => Autochthon.mount_point
 ```
 
-Probably you will want to authenticate. In case you are using [devise](https://github.com/plataformatec/devise) you can do: 
+Probably you will want to authenticate. In case you are using [devise](https://github.com/plataformatec/devise) you can do:
 
 ```rb
 authenticate(:admin) do
@@ -108,7 +108,7 @@ In the layout file call this method:
 <%= include_autochthon_script %>
 ```
 
-Now you can right click on the missing translations fill them in.
+Now you can right click on the missing translations to fill them in.
 
 ## Examples
 
@@ -134,4 +134,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/asok/a
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

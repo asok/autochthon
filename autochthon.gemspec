@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Adam Sokolnicki"]
   spec.email         = ["adam.sokolnicki@gmail.com"]
 
-  spec.summary       = %q{A slim app for storing locales in the db}
-  spec.description   = %q{A slim app for storing locales in the db}
+  spec.summary       = %q{Sinatra app for managing I18n translations}
+  spec.description   = %q{Sinatra app for managing I18n translations}
   spec.homepage      = "https://github.com/asok/autochthon"
   spec.license       = "MIT"
 

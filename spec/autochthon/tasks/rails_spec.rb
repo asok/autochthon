@@ -25,19 +25,22 @@ RSpec.describe 'The tasks for rails', active_record: true do
   end
 
   describe ':import', translations_table: true do
-    let(:simple) { I18n::Backend::Simple.new }
-    let(:ar)     { I18n::Backend::ActiveRecord.new }
+    let!(:simple) { Autochthon::Simple::Backend.new }
+    let!(:ar)     { Autochthon::ActiveRecord::Backend.new }
 
     before do
+      allow(Autochthon::Simple::Backend).to receive(:new) { simple }
       simple.store_translations(:en, {foo: {a:  'bar'}})
       simple.store_translations(:en, {baz: {b: 'bar'}})
       simple.store_translations(:pl, {foo: 'bar'})
+
+      Rake::Task['autochthon:import'].invoke
     end
 
     it 'imports translations from the Simple backend to ActiveRecord backend' do
-      expect(simple.translate(:en, 'foo.a')).to eq('bar')
-      expect(simple.translate(:en, 'baz.b')).to eq('bar')
-      expect(simple.translate(:pl, 'foo')).to eq('bar')
+      expect(ar.translate(:en, 'foo.a')).to eq('bar')
+      expect(ar.translate(:en, 'baz.b')).to eq('bar')
+      expect(ar.translate(:pl, 'foo')).to eq('bar')
     end
   end
 end
