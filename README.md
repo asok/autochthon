@@ -54,6 +54,9 @@ end
 Autochthon.mount_point = "your_mount_point"
 ```
 
+NOTE: this will not work when you have your web server running several ruby processes.
+That is the process in which you'll update the translation will see the new value for it. But other requests might be served by another process which will have the old value.
+
 #### Mount
 
 Add this to the routes:
