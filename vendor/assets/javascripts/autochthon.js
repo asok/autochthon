@@ -17,13 +17,42 @@
         'HTTP_X_CSRF_TOKEN': $.rails.csrfToken()
       },
       success: function(response){
-        $(e.data.target).replaceWith(response[toSend.key]);
         modal().close();
+        $(e.data.target).html(response[toSend.key]);
+        highlight(e.data.target);
       },
       error: function(xhr, status, error) {
         console.error(xhr);
       }
     });
+  }
+
+  function highlight(el) {
+    el = $(el);
+    var colors = [
+      el.css("backgroundColor"),
+      "#fffff0",
+      "#ffffd0",
+      "#ffffe0",
+      "#ffffd0",
+      "#fffec0",
+      "#fffdb0",
+      "#fffca0",
+      "#fffb90",
+      "#fffa80"
+    ];
+
+    var id;
+    var time = 100;
+    var hl = function() {
+      var color = colors.pop();
+      if(color)
+        el.css({backgroundColor: color});
+      else
+        clearInterval(id);
+    };
+
+    id = setInterval(hl, time);
   }
 
   function modal() {
@@ -47,7 +76,7 @@
   }
 
   function openForm(t) {
-    var p = 'Create a new translation for locale: ' + t.locale + ' and key: ' + t.key;
+    var p = 'Update translation for locale: ' + t.locale + ' and key: ' + t.key;
 
     $('#autochthon-p').text(p);
     $('#autochthon-value').val(t.value);
