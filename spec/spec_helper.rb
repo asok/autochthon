@@ -67,4 +67,8 @@ RSpec.configure do |c|
       Autochthon::ActiveRecord::Migration.new.change
     end
   end
+
+  c.after(:each, translations_table: true) do
+    I18n::Backend::ActiveRecord::Translation.delete_all
+  end
 end

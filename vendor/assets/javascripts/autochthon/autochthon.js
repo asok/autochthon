@@ -1,7 +1,7 @@
-(function() {
+window.Autochthon = function(mountPoint) {
   "use strict";
 
-  function submit(e) {
+  var submit = function(e) {
     e.preventDefault();
 
     var toSend = e.data.toSend;
@@ -25,9 +25,9 @@
         console.error(xhr);
       }
     });
-  }
+  };
 
-  function highlight(el) {
+  var highlight = function(el) {
     el = $(el);
     var colors = [
       el.css("backgroundColor"),
@@ -53,13 +53,13 @@
     };
 
     id = setInterval(hl, time);
-  }
+  };
 
-  function modal() {
+  var modal = function() {
     return $('#autochthon-modal')[0];
-  }
+  };
 
-  function form() {
+  var form = function() {
     return "<form id='autochthon-form'>" +
       "<p id='autochthon-p'></p>" +
       "<textarea id='autochthon-value' name='value'></textarea>" +
@@ -67,15 +67,15 @@
       "<button id='autochthon-cancel' type='button'>Cancel</button>" +
       "<button id='autochthon-submit' type='submit'>Submit</button>" +
       "</form>";
-  }
+  };
 
-  function appendModal() {
+  var appendModal = function() {
     document.body.innerHTML += "<dialog id='autochthon-modal'>" +
       form() +
       "</dialog>";
-  }
+  };
 
-  function openForm(t) {
+  var openForm = function(t) {
     var p = 'Update translation for locale: ' + t.locale + ' and key: ' + t.key;
 
     $('#autochthon-p').text(p);
@@ -83,18 +83,18 @@
     $('#autochthon-value').attr('placeholder', 'A new value for key: ' + t.key);
 
     modal().showModal();
-  }
+  };
 
-  function extractLocale(str) {
+  var extractLocale = function(str) {
     return str.split('.')[0];
-  }
+  };
 
-  function extractKey(str) {
+  var extractKey = function(str) {
     var parts = str.split('.');
     return parts.splice(1, parts.length).join('.');
-  }
+  };
 
-  function contextListener(){
+  var contextListener = function() {
     $('#autochthon-cancel').on('click', function(e){
       modal().close();
     });
@@ -111,7 +111,6 @@
         }
 
         var key = el.title.match(/^translation missing: (.+)$/)[1];
-        var mountPoint = $('#autochthon-metadata').data().mountPoint;
 
         openForm({
           value: el.textContent,
@@ -131,13 +130,11 @@
         e.preventDefault();
       }
     });
-  }
+  };
 
-  function init(){
+  document.addEventListener('DOMContentLoaded', function() {
     appendModal();
     contextListener();
     $.rails.refreshCSRFTokens();
-  }
-
-  document.addEventListener('DOMContentLoaded', init);
-})();
+  });
+};
