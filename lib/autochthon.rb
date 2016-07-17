@@ -1,8 +1,8 @@
 require "autochthon/version"
 require "autochthon/web"
 require 'autochthon/engine'
-require 'autochthon/simple/backend'
-require 'autochthon/active_record/backend'
+require 'autochthon/backend/simple'
+require 'autochthon/backend/active_record'
 
 module Autochthon
   module Methods

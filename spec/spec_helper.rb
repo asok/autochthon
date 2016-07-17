@@ -46,9 +46,9 @@ RSpec.configure do |c|
 
   c.before(:each) do |ex|
     Autochthon.backend = if ex.metadata[:type] == :feature
-                           Autochthon::ActiveRecord::Backend.new
+                           Autochthon::Backend::ActiveRecord.new
                          else
-                           Autochthon::Simple::Backend.new
+                           Autochthon::Backend::Simple.new
                          end
 
     Autochthon.backend.instance_variable_set(:@translations, nil)
@@ -64,7 +64,7 @@ RSpec.configure do |c|
 
   c.before(:each, translations_table: true) do
     unless I18n::Backend::ActiveRecord::Translation.table_exists?
-      Autochthon::ActiveRecord::Migration.new.change
+      Autochthon::Backend::ActiveRecord::Migration.new.change
     end
   end
 

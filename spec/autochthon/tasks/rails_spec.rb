@@ -25,11 +25,11 @@ RSpec.describe 'The tasks for rails', active_record: true do
   end
 
   describe ':import', translations_table: true do
-    let!(:simple) { Autochthon::Simple::Backend.new }
-    let!(:ar)     { Autochthon::ActiveRecord::Backend.new }
+    let!(:simple) { Autochthon::Backend::Simple.new }
+    let!(:ar)     { Autochthon::Backend::ActiveRecord.new }
 
     before do
-      allow(Autochthon::Simple::Backend).to receive(:new) { simple }
+      allow(Autochthon::Backend::Simple).to receive(:new) { simple }
       simple.store_translations(:en, {foo: {a:  'bar'}})
       simple.store_translations(:en, {baz: {b: 'bar'}})
       simple.store_translations(:pl, {foo: 'bar'})

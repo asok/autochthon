@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Autochthon::Simple::Backend do
+RSpec.describe Autochthon::Backend::Simple do
   it{ should be_a(I18n::Backend::Simple::Implementation) }
 
   describe '#all' do

@@ -33,7 +33,7 @@ Create file `config/initializers/i18n_backend.rb` with content:
 ```rb
 require 'i18n/backend/active_record'
 
-I18n.backend = Autochthon.backend = Autochthon::ActiveRecord::Backend.new
+I18n.backend = Autochthon.backend = Autochthon::Backend::ActiveRecord.new
 
 Autochthon.mount_point = "your_mount_point"
 ```
@@ -44,7 +44,7 @@ Probably you will want to use memoize so you don't generate a bunch of queries t
 require 'i18n/backend/active_record'
 
 if I18n::Backend::ActiveRecord::Translation.table_exists?
-  I18n.backend = Autochthon.backend = Autochthon::ActiveRecord::Backend.new
+  I18n.backend = Autochthon.backend = Autochthon::Backend::ActiveRecord.new
   I18n.backend.class.include(I18n::Backend::Memoize)
 end
 

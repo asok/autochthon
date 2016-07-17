@@ -1,15 +1,14 @@
 require 'spec_helper'
-require 'autochthon/active_record/backend'
-require 'autochthon/active_record/migration'
+require 'autochthon/backend/active_record'
 
-RSpec.describe Autochthon::ActiveRecord::Backend, active_record: true do
+RSpec.describe Autochthon::Backend::ActiveRecord, active_record: true do
   it{ should be_a(I18n::Backend::ActiveRecord::Implementation) }
 
   describe '#all', translations_table: true do
     around do |example|
-      Autochthon.backend = Autochthon::ActiveRecord::Backend.new
+      Autochthon.backend = Autochthon::Backend::ActiveRecord.new
       ActiveRecord::Base.transaction { example.run }
-      Autochthon.backend = Autochthon::Simple::Backend.new
+      Autochthon.backend = Autochthon::Backend::Simple.new
     end
 
     before do

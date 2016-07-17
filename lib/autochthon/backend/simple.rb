@@ -1,6 +1,6 @@
 module Autochthon
-  module Simple
-    class Backend
+  module Backend
+    class Simple
       include I18n::Backend::Flatten
       include I18n::Backend::Simple::Implementation
 
