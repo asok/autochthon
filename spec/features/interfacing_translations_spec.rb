@@ -2,8 +2,7 @@ require 'spec_helper'
 
 RSpec.describe "Browsing translations from the app endpoint",
                type: :feature,
-               translations_table: true,
-               active_record: true,
+               with_backend: Autochthon::Backend::ActiveRecord,
                js: true do
 
   before do

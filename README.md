@@ -1,6 +1,8 @@
 # Autochthon
 
-A simple Sinatra app for managing translations.
+A simple Sinatra app for managing translations stored in YAML files, database or Redis.
+
+Look at this as [localeapp](https://www.localeapp.com/) hosted in your application.
 
 ## Installation
 
@@ -9,10 +11,6 @@ Add this line to your application's Gemfile:
 ```ruby
 gem 'autochthon', github: 'asok/autochthon
 ```
-
-And then execute:
-
-    $ bundle
 
 ## Usage
 
@@ -23,12 +21,10 @@ And then execute:
 Add this to your Gemfile:
 
 ```rb
-gem 'i18n-active_record',
-    :git => 'git://github.com/svenfuchs/i18n-active_record.git',
-    :require => 'i18n/active_record'
+gem 'i18n-active_record', :require => 'i18n/active_record'
 ```
 
-Create file `config/initializers/i18n_backend.rb` with content:
+Create file `config/initializers/autochthon.rb` with content:
 
 ```rb
 require 'i18n/backend/active_record'
@@ -38,7 +34,7 @@ I18n.backend = Autochthon.backend = Autochthon::Backend::ActiveRecord.new
 Autochthon.mount_point = "your_mount_point"
 ```
 
-Probably you will want to use memoize so you don't generate a bunch of queries to the translations table on each request:
+Probably you will want to use memoize so you don't generate a bunch of queries on each request:
 
 ```rb
 require 'i18n/backend/active_record'
@@ -53,8 +49,52 @@ Autochthon.mount_point = "your_mount_point"
 
 NOTE: this will not work when you have your web server running several ruby processes.
 That is the process in which you'll update the translation will see the new value for it. But other requests might be served by another process which will have the old value.
+If that's the case consider:
+* not using memoization
+* caching the translation with an expiration option
+* using redis backend without memoization
 
-#### Mount
+#### Create table
+
+Create the translations table:
+
+```
+bundle exec rake autochthon:create
+```
+
+### Rails application with Redis backend
+
+#### Setup backend
+
+Add this to your Gemfile:
+
+```rb
+gem 'redis-i18n'
+```
+
+Create file `config/initializers/autochthon.rb` with content:
+
+```rb
+require 'i18n/backend/redis'
+
+I18n.backend = Autochthon.backend = Autochthon::Backend::Redis.new
+
+Autochthon.mount_point = "your_mount_point"
+```
+
+### Rails application with Simple (YAML) backend
+
+NOTE: this backend operates in memory only. Meaning that your translations will not be persisted anywhere.
+
+Create file `config/initializers/autochthon.rb` with content:
+
+```rb
+I18n.backend = Autochthon.backend = Autochthon::Backend::Simple.new
+
+Autochthon.mount_point = "your_mount_point"
+```
+
+### Mount
 
 Add this to the routes:
 
@@ -70,17 +110,9 @@ authenticate(:admin) do
 end
 ```
 
-#### Create table
+### Import
 
-Create the translations table:
-
-```
-rake autochthon:create
-```
-
-#### Import
-
-You can import existing translations to the db:
+You can import existing translations from the I18n's simple backend (YAML files):
 
 ```
 rake autochthon:import
@@ -92,7 +124,7 @@ If you want to only import specific locales you can do so:
 LOCALES="en,fr" rake autochthon:import
 ```
 
-#### Filling missing translations via right click
+### Filling missing translations via right click
 
 In your `app/assets/javascripts/application.js` file do:
 

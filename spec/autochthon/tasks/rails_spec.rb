@@ -2,12 +2,13 @@ require 'spec_helper'
 require 'active_record'
 load 'autochthon/tasks/rails.rake'
 
-RSpec.describe 'The tasks for rails', active_record: true do
+RSpec.describe 'The tasks for rails' do
   before(:all) do
     Rake::Task.define_task(:environment) {}
   end
 
-  describe ':create' do
+  describe ':create',
+           with_backend: Autochthon::Backend::ActiveRecord do
     before do
       Class.new(ActiveRecord::Migration) do
         self.verbose = false
@@ -24,23 +25,31 @@ RSpec.describe 'The tasks for rails', active_record: true do
     end
   end
 
-  describe ':import', translations_table: true do
+  describe '::import' do
     let!(:simple) { Autochthon::Backend::Simple.new }
-    let!(:ar)     { Autochthon::Backend::ActiveRecord.new }
 
     before do
       allow(Autochthon::Backend::Simple).to receive(:new) { simple }
-      simple.store_translations(:en, {foo: {a:  'bar'}})
+      simple.store_translations(:en, {foo: {a: 'bar'}})
       simple.store_translations(:en, {baz: {b: 'bar'}})
       simple.store_translations(:pl, {foo: 'bar'})
-
-      Rake::Task['autochthon:import'].invoke
     end
+    after { Rake::Task['autochthon:import'].reenable }
 
-    it 'imports translations from the Simple backend to ActiveRecord backend' do
-      expect(ar.translate(:en, 'foo.a')).to eq('bar')
-      expect(ar.translate(:en, 'baz.b')).to eq('bar')
-      expect(ar.translate(:pl, 'foo')).to eq('bar')
+    [
+      Autochthon::Backend::ActiveRecord,
+      Autochthon::Backend::Redis
+    ].each do |backend|
+
+      context("backend is #{backend.to_s}", with_backend: backend) do
+        it 'imports translations from the Simple backend' do
+          Rake::Task['autochthon:import'].invoke
+
+          expect(Autochthon.backend.translate(:en, 'foo.a')).to eq('bar')
+          expect(Autochthon.backend.translate(:en, 'baz.b')).to eq('bar')
+          expect(Autochthon.backend.translate(:pl, 'foo')).to eq('bar')
+        end
+      end
     end
   end
 end

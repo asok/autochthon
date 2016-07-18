@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe Autochthon::Web do
+RSpec.describe Autochthon::Web,
+               with_backend: Autochthon::Backend::Simple do
   describe "/" do
     it "serves the html file" do
       get '/'

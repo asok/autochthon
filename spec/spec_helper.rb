@@ -44,17 +44,23 @@ end
 RSpec.configure do |c|
   c.include RSpecMixin
 
-  c.before(:each) do |ex|
-    Autochthon.backend = if ex.metadata[:type] == :feature
-                           Autochthon::Backend::ActiveRecord.new
-                         else
-                           Autochthon::Backend::Simple.new
-                         end
+  c.before(:suite) do
+    Autochthon.backend = I18n.backend
+  end
 
+  c.before(:each) do
     Autochthon.backend.instance_variable_set(:@translations, nil)
   end
 
-  c.before(:all, active_record: true) do
+  c.before(:each, with_backend: Autochthon::Backend::ActiveRecord) do
+    Autochthon.backend = Autochthon::Backend::ActiveRecord.new
+
+    unless I18n::Backend::ActiveRecord::Translation.table_exists?
+      Autochthon::Backend::ActiveRecord::Migration.new.change
+    end
+  end
+
+  c.before(:all, with_backend: Autochthon::Backend::ActiveRecord) do
     ActiveRecord::Base.establish_connection(
       adapter:  "sqlite3",
       database: "local",
@@ -62,13 +68,43 @@ RSpec.configure do |c|
     )
   end
 
-  c.before(:each, translations_table: true) do
-    unless I18n::Backend::ActiveRecord::Translation.table_exists?
-      Autochthon::Backend::ActiveRecord::Migration.new.change
-    end
+  c.after(:each, with_backend: Autochthon::Backend::ActiveRecord) do
+    I18n::Backend::ActiveRecord::Translation.delete_all
   end
 
-  c.after(:each, translations_table: true) do
-    I18n::Backend::ActiveRecord::Translation.delete_all
+  c.before(:each, with_backend: Autochthon::Backend::Redis) do
+    Autochthon.backend = Autochthon::Backend::Redis.new(db: ENV['TEST_REDIS_DB'] || 15)
+  end
+
+  c.after(:each, with_backend: Autochthon::Backend::Redis) do
+    Autochthon.backend.store.flushdb
+  end
+
+  c.before(:each, with_backend: Autochthon::Backend::Simple) do
+    Autochthon.backend = Autochthon::Backend::Simple.new
+  end
+end
+
+RSpec.shared_examples_for :fetching_all_translations do
+  describe "#all" do
+    subject { Autochthon.backend }
+
+    before do
+      subject.store_translations(:en, {foo: {a:  'bar'}})
+      subject.store_translations(:en, {baz: {b: 'bar'}})
+      subject.store_translations(:pl, {foo: 'bar'})
+    end
+
+    it 'returns all translations' do
+      expect(subject.all).to include(key: :"foo.a", value: "bar", locale: :en)
+      expect(subject.all).to include(key: :"baz.b", value: "bar", locale: :en)
+      expect(subject.all).to include(key: :foo,     value: "bar", locale: :pl)
+    end
+
+    context 'passing in locales' do
+      it 'returns translations for the passed locales only' do
+        expect(subject.all([:pl])).to eq([key: :foo, value: "bar", locale: :pl])
+      end
+    end
   end
 end

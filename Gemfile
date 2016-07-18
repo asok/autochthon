@@ -1,16 +1,18 @@
 source 'https://rubygems.org'
 
+gem 'activerecord'
+gem 'actionview'
+
+gem 'i18n'
+
+gem 'i18n-active_record',
+    :require => 'i18n/active_record'
+
+gem 'redis-i18n', '~> 0.6.5'
+
 group :test do
-  gem 'activerecord'
-  gem 'actionview'
-
-  gem 'i18n-active_record',
-      :git => 'git://github.com/svenfuchs/i18n-active_record.git',
-      :require => 'i18n/active_record'
-
   gem 'capybara-webkit'
   gem 'selenium-webdriver'
 end
 
 gemspec
-

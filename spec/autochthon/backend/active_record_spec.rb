@@ -1,42 +1,11 @@
 require 'spec_helper'
 require 'autochthon/backend/active_record'
 
-RSpec.describe Autochthon::Backend::ActiveRecord, active_record: true do
+RSpec.describe Autochthon::Backend::ActiveRecord,
+               with_backend: Autochthon::Backend::ActiveRecord do
   it{ should be_a(I18n::Backend::ActiveRecord::Implementation) }
 
   describe '#all', translations_table: true do
-    around do |example|
-      Autochthon.backend = Autochthon::Backend::ActiveRecord.new
-      ActiveRecord::Base.transaction { example.run }
-      Autochthon.backend = Autochthon::Backend::Simple.new
-    end
-
-    before do
-      subject.store_translations(:en, {foo: {a:  'bar'}})
-      subject.store_translations(:en, {baz: {b: 'bar'}})
-      subject.store_translations(:pl, {foo: 'bar'})
-    end
-
-    def normalize(translations)
-      JSON.parse(translations.to_json).map do |t|
-        t.keep_if{ |k, _| %w[locale key value].include? k }
-      end
-    end
-
-    it 'returns all translations' do
-      expect(normalize(subject.all)).
-        to include('key' => "foo.a", 'value' => "bar", 'locale' => 'en')
-      expect(normalize(subject.all)).
-        to include('key' => "baz.b", 'value' => "bar", 'locale' => 'en')
-      expect(normalize(subject.all)).
-        to include('key' => "foo",   'value' => "bar", 'locale' => 'pl')
-    end
-
-    context 'passing in locales' do
-      it 'returns translations for the passed locales only' do
-        expect(normalize(subject.all(['pl']))).
-          to eq(['key' => "foo",   'value' => "bar", 'locale' => 'pl'])
-      end
-    end
+    include_examples :fetching_all_translations
   end
 end

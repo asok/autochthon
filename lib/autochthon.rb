@@ -3,6 +3,7 @@ require "autochthon/web"
 require 'autochthon/engine'
 require 'autochthon/backend/simple'
 require 'autochthon/backend/active_record'
+require 'autochthon/backend/redis'
 
 module Autochthon
   module Methods

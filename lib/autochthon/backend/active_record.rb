@@ -1,3 +1,5 @@
+require 'autochthon/backend/fetching_all'
+
 begin
   require 'i18n/backend/active_record'
 
@@ -6,11 +8,12 @@ begin
       class ActiveRecord
         include I18n::Backend::ActiveRecord::Implementation
 
-        def all(locales = nil)
-          scope = I18n::Backend::ActiveRecord::Translation
-          scope = scope.where(locale: locales) if locales
+        include FetchingAll
 
-          scope.all
+        def all_for_locale(locale)
+          Hash[I18n::Backend::ActiveRecord::Translation
+                 .where(locale: locale)
+                 .pluck(:key, :value)]
         end
 
         class Migration < ::ActiveRecord::Migration
