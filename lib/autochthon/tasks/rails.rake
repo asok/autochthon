@@ -11,7 +11,7 @@ namespace :autochthon do
     backend = Autochthon::Backend::Simple.new
 
     locales = (ENV['LOCALES'] || '').split(',')
-    locales = backend.available_locales #if locales.empty?
+    locales = backend.available_locales if locales.empty?
 
     fn = -> do
       backend.all(locales).each do |t|
