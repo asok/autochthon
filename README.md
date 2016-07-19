@@ -4,6 +4,10 @@ A simple Sinatra app for managing translations stored in YAML files, database or
 
 Look at this as [localeapp](https://www.localeapp.com/) hosted in your application.
 
+Video demonstration:
+
+[![Video demonstration](http://img.youtube.com/vi/dOM3KTPEIEY/0.jpg)](https://youtu.be/dOM3KTPEIEY)
+
 ## Installation
 
 Add this line to your application's Gemfile:
