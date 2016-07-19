@@ -9,7 +9,7 @@ Look at this as [localeapp](https://www.localeapp.com/) hosted in your applicati
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'autochthon', github: 'asok/autochthon
+gem 'autochthon'
 ```
 
 ## Usage
