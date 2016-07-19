@@ -110,7 +110,7 @@ Probably you will want to authenticate. In case you are using [devise](https://g
 
 ```rb
 authenticate(:admin) do
-  mount Autochthon::Web => '/autochthon', :as Autochthon.mount_point
+  mount Autochthon::Web => '/autochthon', :as => Autochthon.mount_point
 end
 ```
 
